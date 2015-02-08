@@ -7,8 +7,10 @@
 #include "Watch.h"
 #include <TM1638.h>
 
+#include <Cmd.h>
+
 // Define a TM1638 module on data pin 3 (DIO, yellow), clock pin 2 (CLK, brown), strobe pin 4 (STB0, green)
-TM1638* tm1638 = new TM1638(3, 2, 4);
+TM1638* tm1638 = 0;
 
 /**
  * TM1638 Buttons:
@@ -23,7 +25,7 @@ TM1638* tm1638 = new TM1638(3, 2, 4);
  */
 
 /**
- * TM1638 LEDs:
+ * TM1638 LEDs: (obsolete)
  * - L8: Seconds selected
  * - L4 & L5: Minutes selected
  * - L1: Hours selected
@@ -33,14 +35,13 @@ word dots = 0;
 char sign = ' ';
 char text[17];
 
-Blanking* dispPartBlanking   = new Blanking();
-
-const unsigned int DEBOUNCE_TIME_MILLIS = 200;
+Blanking* dispPartBlanking = 0;
 
 void dbgPrinter();
 void handleMMI();
 void handleButtons();
 void handleDisplay();
+
 
 unsigned int oneSecMillis = 1000;
 class DbgPrintTimerAdapter : public TimerAdapter
@@ -51,7 +52,8 @@ public:
     dbgPrinter();
   }
 };
-Timer* dbgPrintTimer = new Timer(new DbgPrintTimerAdapter(), Timer::IS_RECURRING, oneSecMillis);
+Timer* dbgPrintTimer = 0;
+
 
 unsigned int mmiInterval = 200;
 class MmiTimerAdapter : public TimerAdapter
@@ -62,122 +64,177 @@ public:
     handleMMI();
   }
 };
-Timer* mmiTimer = new Timer(new MmiTimerAdapter(), Timer::IS_RECURRING, mmiInterval);
+Timer* mmiTimer = 0;
 
 
-Watch* watch = new Watch();
+Watch* watch = 0;
 wTime* t;
 byte buttons = 0;
+
+
+void hello(int arg_cnt, char **args)
+{
+  Serial.println("Hello world.");
+}
+
+void debug(int arg_cnt, char **args)
+{
+  if ((0 != dbgPrintTimer) && (arg_cnt > 1))
+  {
+    if (strcmp(args[1], "on") == 0)
+    {
+      dbgPrintTimer->startTimer(oneSecMillis);
+    }
+    else
+    {
+      dbgPrintTimer->cancelTimer();
+    }
+  }
+}
+
+void watchCtrl(int arg_cnt, char **args)
+{
+  if ((0 != watch) && (arg_cnt > 1))
+  {
+    if (strcmp(args[1], "run") == 0)
+    {
+      watch->run();
+    }
+    else if (strcmp(args[1], "stop") == 0)
+    {
+      watch->stop();
+    }
+  }
+}
+
 
 //The setup function is called once at startup of the sketch
 void setup()
 {
+  tm1638 = new TM1638(3, 2, 4);
+
+  cmdAdd("hello", hello);
+  cmdAdd("debug", debug);
+  cmdAdd("watch", watchCtrl);
+
+  // Initialize ArduinoCmd lib and open the serial port at 115200 bps:
+  cmdInit(115200);
+
+  watch = new Watch();
   watch->setSig(1);
   watch->setHrs(0);
   watch->setMin(0);
   watch->setSec(10);
   watch->store();
 
-  // open the serial port at 115200 bps:
-  Serial.begin(115200);
+  dispPartBlanking = new Blanking();
+  mmiTimer = new Timer(new MmiTimerAdapter(), Timer::IS_RECURRING, mmiInterval);
+  dbgPrintTimer = new Timer(new DbgPrintTimerAdapter(), Timer::IS_RECURRING, 0);
 }
 
 void handleMMI()
 {
   handleButtons();
-  t = watch->getTime();
   handleDisplay();
 }
 
 void handleButtons()
 {
-  buttons = tm1638->getButtons();
-  if (buttons & 0x80)
+  if (0 != tm1638 && 0 != watch)
   {
-    watch->run();
-  }
-  else if (buttons & 0x40)
-  {
-    watch->stop();
-  }
-  else if (buttons & 0x20)
-  {
-    watch->store();
-  }
-  else if (buttons & 0x10)
-  {
-    watch->load();
-  }
-  else if (buttons & 0x04)
-  {
-    watch->partSelUp();
-  }
-  else if (buttons & 0x08)
-  {
-    watch->partSelDn();
-  }
-  else if (buttons & 0x01)
-  {
-    watch->incrSet();
-  }
-  else if (buttons & 0x02)
-  {
-    watch->decrSet();
+    buttons = tm1638->getButtons();
+    if (buttons & 0x80)
+    {
+      watch->run();
+    }
+    else if (buttons & 0x40)
+    {
+      watch->stop();
+    }
+    else if (buttons & 0x20)
+    {
+      watch->store();
+    }
+    else if (buttons & 0x10)
+    {
+      watch->load();
+    }
+    else if (buttons & 0x04)
+    {
+      watch->partSelUp();
+    }
+    else if (buttons & 0x08)
+    {
+      watch->partSelDn();
+    }
+    else if (buttons & 0x01)
+    {
+      watch->incrSet();
+    }
+    else if (buttons & 0x02)
+    {
+      watch->decrSet();
+    }
   }
 }
 
 void handleDisplay()
 {
   dots = 0x14;
-  sign = t->sign ? '-' : ' ';
 
-  if (watch->isHrsSelected())
+  if ((0 != tm1638) && (0 != watch) && (0 != dispPartBlanking))
   {
-    if (dispPartBlanking->isSignalBlanked())
-    {
-      dots = 0x04;
-    }
-    else
-    {
-      dots = 0x34;
-    }
-  }
-  else if (watch->isMinSelected())
-  {
-    if (dispPartBlanking->isSignalBlanked())
-    {
-      dots = 0x10;
-    }
-    else
-    {
-      dots = 0x1C;
-    }
-  }
-  else if (watch->isSecSelected())
-  {
-    if (dispPartBlanking->isSignalBlanked())
-    {
-      dots = 0x14;
-    }
-    else
-    {
-      dots = 0x17;
-    }
-  }
-  else if (watch->isSigSelected())
-  {
-    if (dispPartBlanking->isSignalBlanked())
-    {
-      sign = t->sign ? '-' : ' ';
-    }
-    else
-    {
-      sign = t->sign ? '=' : '_';
-    }
-  }
+    t = watch->getTime();
+    sign = t->sign ? '-' : ' ';
 
-  sprintf(text, " %c%02u%02u%02u", sign, t->h, t->m, t->s);
-  tm1638->setDisplayToString(text, dots);
+    if (watch->isHrsSelected())
+    {
+      if (dispPartBlanking->isSignalBlanked())
+      {
+        dots = 0x04;
+      }
+      else
+      {
+        dots = 0x34;
+      }
+    }
+    else if (watch->isMinSelected())
+    {
+      if (dispPartBlanking->isSignalBlanked())
+      {
+        dots = 0x10;
+      }
+      else
+      {
+        dots = 0x1C;
+      }
+    }
+    else if (watch->isSecSelected())
+    {
+      if (dispPartBlanking->isSignalBlanked())
+      {
+        dots = 0x14;
+      }
+      else
+      {
+        dots = 0x17;
+      }
+    }
+    else if (watch->isSigSelected())
+    {
+      if (dispPartBlanking->isSignalBlanked())
+      {
+        sign = t->sign ? '-' : ' ';
+      }
+      else
+      {
+        sign = t->sign ? '=' : '_';
+      }
+    }
+
+    sprintf(text, " %c%02u%02u%02u", sign, t->h, t->m, t->s);
+    tm1638->setDisplayToString(text, dots);
+  }
 }
 
 void dbgPrinter()
@@ -196,5 +253,16 @@ void dbgPrinter()
 void loop()
 {
   yield();
+}
+
+/*
+ SerialEvent occurs whenever a new data comes in the
+ hardware serial RX.  This routine is run between each
+ time loop() runs, so using delay inside loop can delay
+ response.  Multiple bytes of data may be available.
+ */
+void serialEvent()
+{
+  cmdPoll();
 }
 

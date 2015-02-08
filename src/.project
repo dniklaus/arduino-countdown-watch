@@ -47,6 +47,11 @@
 			<locationURI>ArduinoPinPath/mega</locationURI>
 		</link>
 		<link>
+			<name>comp/CmdArduino</name>
+			<type>2</type>
+			<locationURI>arduino_countdown_watchCmdArduino/CmdArduino</locationURI>
+		</link>
+		<link>
 			<name>comp/CountDownWatch</name>
 			<type>2</type>
 			<locationURI>arduino_countdown_watchCountDownWatch/CountDownWatch</locationURI>

@@ -12,3 +12,6 @@
 [submodule "lib/comp/tm16xx"]
 	path = lib/comp/tm16xx
 	url = git@github.com:dniklaus/arduino-display-tm16xx.git
+[submodule "lib/comp/CmdArduino"]
+	path = lib/comp/CmdArduino
+	url = git@github.com:fakufaku/CmdArduino.git
