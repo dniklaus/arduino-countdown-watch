@@ -1,31 +1,8 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-/workspace/RemoteSystemsTempFiles
+/src/Release
 /workspace/.metadata
+/src/spec.d
+/tools/arduino
+/tools/eclipseArduino
+/workspace/RemoteSystemsTempFiles
+/src/.settings/language.settings.xml
+/src/.settings/org.eclipse.cdt.core.prefs

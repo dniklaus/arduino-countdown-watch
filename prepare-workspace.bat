@@ -87,6 +87,12 @@ if not "%statusResult%"=="" (
 )
 
 ::-----------------------------------------------------------------------------
+:: Prepare org.eclipse.cdt.core.prefs file from template
+::-----------------------------------------------------------------------------
+:: Eclipse Arduino IDE applies changes to org.eclipse.cdt.core.prefs, copy from template before
+copy %ProjectHome%\src\.settings\org.eclipse.cdt.core.prefs-template %ProjectHome%\src\.settings\org.eclipse.cdt.core.prefs
+
+::-----------------------------------------------------------------------------
 :: Get the tools
 ::-----------------------------------------------------------------------------
 :: Arduino IDE
