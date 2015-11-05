@@ -75,15 +75,15 @@
 	<variableList>
 		<variable>
 			<name>ArduinoHardwareLibPath</name>
-			<value>file:/C:/Users/niklausd/AppData/Roaming/Arduino15/packages/arduino/hardware/avr/1.6.8/libraries</value>
+			<value>file:/C:/git/arduino-projects/arduino-countdown-watch/tools/arduino/hardware/arduino/avr/libraries</value>
 		</variable>
 		<variable>
 			<name>ArduinoPinPath</name>
-			<value>file:/C:/Users/niklausd/AppData/Roaming/Arduino15/packages/arduino/hardware/avr/1.6.8/variants</value>
+			<value>file:/C:/git/arduino-projects/arduino-countdown-watch/tools/arduino/hardware/arduino/avr/variants</value>
 		</variable>
 		<variable>
 			<name>ArduinoPlatformPath</name>
-			<value>file:/C:/Users/niklausd/AppData/Roaming/Arduino15/packages/arduino/hardware/avr/1.6.8/cores</value>
+			<value></value>
 		</variable>
 	</variableList>
 </projectDescription>
