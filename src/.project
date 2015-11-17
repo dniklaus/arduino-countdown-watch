@@ -83,7 +83,7 @@
 		</variable>
 		<variable>
 			<name>ArduinoPlatformPath</name>
-			<value></value>
+			<value>file:/C:/git/arduino-projects/arduino-countdown-watch/tools/arduino/hardware/arduino/avr/cores</value>
 		</variable>
 	</variableList>
 </projectDescription>
