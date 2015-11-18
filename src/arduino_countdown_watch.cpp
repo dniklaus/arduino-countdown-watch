@@ -104,6 +104,10 @@ void watchCtrl(int arg_cnt, char **args)
     {
       watch->stop();
     }
+    else if (strcmp(args[1], "load") == 0)
+    {
+      watch->load();
+    }
   }
 }
 
