@@ -108,6 +108,33 @@ void watchCtrl(int arg_cnt, char **args)
     {
       watch->load();
     }
+    else if (strcmp(args[1], "store") == 0)
+    {
+      watch->store();
+    }
+    else if (strcmp(args[1], "sel") == 0)
+    {
+      if (arg_cnt > 2)
+      {
+        if (strcmp(args[2], "up") == 0)
+        {
+          watch->partSelUp();
+        }
+        else if (strcmp(args[2], "down") == 0)
+        {
+          watch->partSelDn();
+        }
+      }
+    }
+    else if (strcmp(args[1], "incr") == 0)
+    {
+      watch->incrSet();
+    }
+    else if (strcmp(args[1], "decr") == 0)
+    {
+      watch->decrSet();
+    }
+
   }
 }
 
@@ -146,38 +173,42 @@ void handleButtons()
 {
   if (0 != tm1638 && 0 != watch)
   {
-    buttons = tm1638->getButtons();
-    if (buttons & 0x80)
+    byte newButtons = tm1638->getButtons();
+    if (newButtons != buttons)
     {
-      watch->run();
-    }
-    else if (buttons & 0x40)
-    {
-      watch->stop();
-    }
-    else if (buttons & 0x20)
-    {
-      watch->store();
-    }
-    else if (buttons & 0x10)
-    {
-      watch->load();
-    }
-    else if (buttons & 0x04)
-    {
-      watch->partSelUp();
-    }
-    else if (buttons & 0x08)
-    {
-      watch->partSelDn();
-    }
-    else if (buttons & 0x01)
-    {
-      watch->incrSet();
-    }
-    else if (buttons & 0x02)
-    {
-      watch->decrSet();
+      buttons = newButtons;
+      if (buttons & 0x40)
+      {
+        watch->stop();
+      }
+      else if (buttons & 0x80)
+      {
+        watch->run();
+      }
+      else if (buttons & 0x20)
+      {
+        watch->store();
+      }
+      else if (buttons & 0x10)
+      {
+        watch->load();
+      }
+      else if (buttons & 0x04)
+      {
+        watch->partSelUp();
+      }
+      else if (buttons & 0x08)
+      {
+        watch->partSelDn();
+      }
+      else if (buttons & 0x01)
+      {
+        watch->incrSet();
+      }
+      else if (buttons & 0x02)
+      {
+        watch->decrSet();
+      }
     }
   }
 }
