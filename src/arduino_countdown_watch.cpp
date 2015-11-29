@@ -1,6 +1,7 @@
 // Do not remove the include below
 #include "arduino_countdown_watch.h"
 
+#include "Arduino.h"
 #include "Blanking.h"
 #include "Timer.h"
 
@@ -161,12 +162,15 @@ void setup()
   dispPartBlanking = new Blanking();
   mmiTimer = new Timer(new MmiTimerAdapter(), Timer::IS_RECURRING, mmiInterval);
   dbgPrintTimer = new Timer(new DbgPrintTimerAdapter(), Timer::IS_RECURRING, 0);
+
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void handleMMI()
 {
   handleButtons();
   handleDisplay();
+  digitalWrite(LED_BUILTIN, watch->isRunning());
 }
 
 void handleButtons()
