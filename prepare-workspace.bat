@@ -21,9 +21,16 @@ for /f "delims=" %%x in (%ProjectHome%\env.config) do (set "%%x")
 ::set ArduinoDownloadUrl=http://arduino.cc/download.php?f=
 ::set ArduinoVer=1.5.6-r2 ::to be set in env.config
 
-:: Eclipse Arduino Workbench Bundle (see http://www.baeyens.it/eclipse/download.php)
+:: Eclipse Arduino Workbench Bundle nightly build (see http://www.baeyens.it/eclipse/download.php)
 ::set EclipseArduinoDownloadUrl=http://www.baeyens.it/eclipse/download/product
+::set EclipseArduinoRel=
 ::set EclipseArduinoVer=2015-01-13_02-06-58 ::to be set in env.config
+::set EclipseArduinoDownloadUrlTail=
+:: Bundle Release V2.4: http://eclipse.baeyens.it/download/product/V2.4_win64.2015-12-06_20-24-02.tar.gz?forcedownload
+::set EclipseArduinoDownloadUrl=http://eclipse.baeyens.it/download/product
+::set EclipseArduinoRel=V2.4_
+::set EclipseArduinoVer=2015-12-06_20-24-02
+::set EclipseArduinoDownloadUrlTail=?forcedownload
 
 :: Expected Project Location (Eclipse CDT cannot deal with relative paths)
 :: set ArduinoProjects=C:\git\arduino-projects ::to be set in env.config
@@ -59,7 +66,8 @@ set CurArduino=%ArduinoRevs%\arduino-%ArduinoVer%
 
 :: Eclipse Arduino Workbench Bundle
 set EclipseArduinoRevs=%ArduinoTools%\eclipseArduino_revs
-set CurEclipseArduino=%EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%\eclipseArduino
+set CurEclipseArduinoVerName=%EclipseArduinoRel%%OsVariant%.%EclipseArduinoVer%
+set CurEclipseArduino=%EclipseArduinoRevs%\%CurEclipseArduinoVerName%\eclipseArduino
 
 :: 7Zip
 set Archiver=%ThisProjTools%\7za920\7za.exe
@@ -118,13 +126,13 @@ if not exist "%CurEclipseArduino%" (
     md "%EclipseArduinoRevs%"
   )
   if not exist "%EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%.tar.gz" (
-    %Wget% --tries=0 --output-document="%EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%.tar.gz" "%EclipseArduinoDownloadUrl%/%OsVariant%.%EclipseArduinoVer%.tar.gz"
+    %Wget% --tries=0 --output-document="%EclipseArduinoRevs%\%CurEclipseArduinoVerName%.tar.gz" "%EclipseArduinoDownloadUrl%/%CurEclipseArduinoVerName%.tar.gz%EclipseArduinoDownloadUrlTail%"
   )
-  %Archiver% x -y -o%EclipseArduinoRevs% %EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%.tar.gz
-  %Archiver% x -y -o%EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer% %EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%.tar
+  %Archiver% x -y -o%EclipseArduinoRevs% %EclipseArduinoRevs%\%CurEclipseArduinoVerName%.tar.gz
+  %Archiver% x -y -o%EclipseArduinoRevs%\%CurEclipseArduinoVerName% %EclipseArduinoRevs%\%CurEclipseArduinoVerName%.tar
   if %errorlevel% == 0 (
-    del %EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%.tar.gz
-	del %EclipseArduinoRevs%\%OsVariant%.%EclipseArduinoVer%.tar
+    del %EclipseArduinoRevs%\%CurEclipseArduinoVerName%.tar.gz
+	del %EclipseArduinoRevs%\%CurEclipseArduinoVerName%.tar
   )
 )
 :: create softlink (junction) for Eclipse Arduino Workbench Bundle in current project tools
