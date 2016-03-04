@@ -37,6 +37,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>prod</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>arduino/core</name>
 			<type>2</type>
 			<locationURI>ArduinoPlatformPath/arduino</locationURI>
@@ -44,7 +49,7 @@
 		<link>
 			<name>arduino/variant</name>
 			<type>2</type>
-			<locationURI>ArduinoPinPath/mega</locationURI>
+			<locationURI>ArduinoPinPath/standard</locationURI>
 		</link>
 		<link>
 			<name>comp/CmdArduino</name>
@@ -55,6 +60,11 @@
 			<name>comp/CountDownWatch</name>
 			<type>2</type>
 			<locationURI>arduino_countdown_watchCountDownWatch/CountDownWatch</locationURI>
+		</link>
+		<link>
+			<name>comp/IVM</name>
+			<type>2</type>
+			<locationURI>arduino_countdown_watchIVM/IVM</locationURI>
 		</link>
 		<link>
 			<name>comp/TM1638</name>
@@ -70,6 +80,11 @@
 			<name>plat/Timer</name>
 			<type>2</type>
 			<locationURI>arduino_countdown_watchTimer/Timer</locationURI>
+		</link>
+		<link>
+			<name>prod/prod_ivm</name>
+			<type>2</type>
+			<locationURI>arduino_countdown_watchprod_ivm/prod_ivm</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

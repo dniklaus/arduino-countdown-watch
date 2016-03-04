@@ -15,3 +15,6 @@
 [submodule "lib/comp/CmdArduino"]
 	path = lib/comp/CmdArduino
 	url = git@github.com:fakufaku/CmdArduino.git
+[submodule "lib/comp/ivm"]
+	path = lib/comp/ivm
+	url = https://github.com/dniklaus/arduino-utils-ivm.git
