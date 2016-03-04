@@ -214,6 +214,17 @@ void handleButtons()
         watch->decrSet();
       }
     }
+    else
+    {
+      if (0x01 == buttons)
+      {
+        watch->incrSet();
+      }
+      else if (0x02 == buttons)
+      {
+        watch->decrSet();
+      }
+    }
   }
 }
 
