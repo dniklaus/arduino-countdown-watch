@@ -1,13 +1,10 @@
-// Do not remove the include below
-#include "arduino_countdown_watch.h"
-
 #include "Arduino.h"
-#include "Blanking.h"
-#include "Timer.h"
 
-#include "Watch.h"
+#include <Timer.h>
+#include <Watch.h>
 #include <TM1638.h>
-
+#include <CommandParser.h>
+#include <Blanking.h>
 #include <Cmd.h>
 
 // Define a TM1638 module on data pin 3 (DIO, yellow), clock pin 2 (CLK, brown), strobe pin 4 (STB0, green)
@@ -143,6 +140,8 @@ void watchCtrl(int arg_cnt, char **args)
 //The setup function is called once at startup of the sketch
 void setup()
 {
+  Serial.begin(9600);
+
   tm1638 = new TM1638(3, 2, 4);
 
   cmdAdd("hello", hello);
@@ -150,7 +149,7 @@ void setup()
   cmdAdd("watch", watchCtrl);
 
   // Initialize ArduinoCmd lib and open the serial port at 115200 bps:
-  cmdInit(115200);
+  cmdInit(9600);
 
   watch = new Watch();
   watch->setSig(1);
@@ -302,7 +301,7 @@ void dbgPrinter()
 // The loop function is called in an endless loop
 void loop()
 {
-  yield();
+  scheduleTimers();
 }
 
 /*
