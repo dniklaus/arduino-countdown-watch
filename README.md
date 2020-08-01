@@ -1,2 +1,2 @@
 # arduino-countdown-watch
-Universal Countdown Watch
+Countdown Watch (running with TM1638 7seg LED Keypad)
